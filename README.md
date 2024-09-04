@@ -1,5 +1,19 @@
 # Flux Demo
 
+<!--toc:start-->
+- [Flux Demo](#flux-demo)
+  - [Setup](#setup)
+    - [Generate a GitHub PAT](#generate-a-github-pat)
+    - [Setup a Cluster with Flux](#setup-a-cluster-with-flux)
+  - [Structure of the Repo](#structure-of-the-repo)
+    - [Cluster Definitions](#cluster-definitions)
+    - [Infrastructure Definition](#infrastructure-definition)
+    - [Application Definitions](#application-definitions)
+  - [Workflow](#workflow)
+<!--toc:end-->
+
+---
+
 ## Setup
 
 ### Generate a GitHub PAT
