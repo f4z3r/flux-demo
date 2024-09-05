@@ -314,7 +314,45 @@ section).
 
 ### Infrastructure Definition
 
-<!-- TODO -->
+The infrastructure definition is fully placed under `infrastructure/`. Each component of the
+infrastructure is placed within a subdirectory there and simply contains files needed to deploy that
+infrastructure component. For instance, for the Vault Secrets Operator, a namespace, Helm
+repository, and a release of the operator are defined. These files can use cluster variables that
+are then injected by the infrastructure deployment.
+
+<details>
+<summary>Example definition</summary>
+
+The snippet below shows a Helm release using a variable to determine the interval for which Flux
+should verify the release and reconcile it on the cluster. It sets a default of 30 minutes, which
+can be overwritten by every cluster definition as needed.
+
+```yaml
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: vault-secrets-operator
+  namespace: vault-secrets-operator
+spec:
+  interval: "${infrastructure_vso_release_interval:=30m}"
+  chart:
+    spec:
+      chart: vault-secrets-operator
+      version: "0.8.1"
+      sourceRef:
+        kind: HelmRepository
+        name: hashicorp
+        namespace: vault-secrets-operator
+      interval: 12h
+  values:
+    extraLabels:
+      it.example.com/owned-by: sre-team
+```
+
+- should not allow setting version of chart
+
+</details>
+
 
 ### Application Definitions
 
@@ -337,5 +375,6 @@ TODO:
   - deploy new app
   - test new infra
   - rollout new infra
+  - rollback of infra
   - onboard new cluster
 -->
