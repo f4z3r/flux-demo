@@ -186,9 +186,131 @@ variables substitution such as `meta_cluster_name` or `infrastructure_nginx_rele
 variables are used within the infrastructure definition and can be set here to customize some
 infrastructure components as needed.
 
+Another important aspect to note is that the infrastructure as a whole is deployed (`path:
+./infrastructure/`) and not individual elements of the infrastructure being hand picked.
+
 </details>
 
-<!-- TODO: app deployment for cluster -->
+Application deployments typically need to be much more dynamic. These tend to be updated more often,
+and different clusters might have a completely different set of applications deployed to them. Thus
+the setup is slightly different to how infrastructure is handled, as for instance there is typically
+no need to freeze application definitions.
+
+The application deployment consist of two elements:
+- `apps-base.yaml`: the base `Kustomization` telling to deploy applications to the cluster.
+- `apps`: the directory defining which apps to deploy to the respective cluster, and what values to
+  inject into the applications.
+
+The overall structure for a sample cluster looks as follows:
+
+```
+apps-base.yaml
+apps
+├── kustomization.yaml
+└── values
+    ├── app1.yaml
+    ├── app3.yaml
+    ├── app4.yaml
+    └── app7.yaml
+```
+
+<details>
+<summary>Application base deployment</summary>
+
+The application base deployment is a simple Flux object telling to deploy applications based on
+whatever is defined in the `apps` directory for that cluster:
+
+```yaml
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: apps-base
+  namespace: flux-system
+spec:
+  interval: 1m
+  dependsOn:
+    - name: infrastructure
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  path: ./clusters/demo/apps/
+  prune: true
+  wait: true
+  timeout: 5m0s
+```
+
+Note here that we reference `flux-system` as the `GitRepository` being used as a source. Hence
+neither the application definitions nor the deployments configuration under `apps/` is pinned. This
+The fact that `apps/` is not pinned is unproblematic, as this is a different directory for each
+cluster. The application definitions are not pinned as changes to them tend to be performed very
+individually for each cluster and versioning as a whole makes little sense. Thus we rely much more
+on `kustomize` to update these values in the cluster definition (see next section on `apps/`
+directory).
+
+</details>
+
+<details>
+<summary>Application variable injection</summary>
+
+The application variable injection directory essentially defines what applications should be
+deployed on the repository, and how these should be customized.
+
+```yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../../apps/app1
+  - ../../../apps/app3
+  - ../../../apps/app4
+  - ../../../apps/app7
+  - ../../../apps/app8
+patches:
+  - path: ./values/app1.yaml
+    target:
+      kind: HelmRelease
+      name: app1
+  - path: ./values/app3.yaml
+    target:
+      kind: HelmRelease
+      name: app3
+  - path: ./values/app4.yaml
+    target:
+      kind: HelmRelease
+      name: app4
+  - path: ./values/app7.yaml
+    target:
+      kind: HelmRelease
+      name: app7
+```
+
+The `Kustomization` defines what resources should be deployed under the `resources` block, and how
+these should be updated based on patches defined under `values/`. It should be notes that some
+applications might not be customized and thus not have a patch, and that while patches typically
+update (Helm) values, they might also pin versions of the Helm chart release or other.
+
+```yaml
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: app1
+  namespace: app1
+spec:
+  chart:
+    spec:
+      version: ">=1.0.0"
+  values:
+    ingress:
+      hosts:
+        - host: app1.production
+          paths:
+            - path: /
+              pathType: ImplementationSpecific
+```
+
+Of course, the patches should update resources existing under the application definitions (see later
+section).
+
+</details>
 
 ### Infrastructure Definition
 
