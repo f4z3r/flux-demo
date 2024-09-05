@@ -196,7 +196,17 @@ infrastructure components as needed.
 
 ### Application Definitions
 
-<!-- TODO -->
+Currently, we only define a single default application to showcase how we plan on deploying apps to
+a cluster. This application is based on https://github.com/stefanprodan/podinfo
+
+<!--
+TODO:
+- need to have individual values.
+- need to be able to deploy different versions of the helm chart
+- how to update the monorepo stuff itself
+-- via single app definition reference?
+-- not possible, but most is kept in the app definitions themselves
+-->
 
 ## Workflow
 

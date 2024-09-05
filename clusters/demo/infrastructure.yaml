@@ -28,5 +28,5 @@ spec:
     substitute:
       meta_cluster_name: "demo"
       meta_network_zone: "dmz-123"
-      meta_productive: true
+      meta_productive: "true"
       infrastructure_nginx_release_interval: "1m"
