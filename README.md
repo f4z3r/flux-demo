@@ -14,6 +14,9 @@
 
 ---
 
+This repository shows an example how one can use a single mono-repository to manage multiple
+clusters' infrastructure in a controlled fashion.
+
 ## Setup
 
 ### Generate a GitHub PAT
