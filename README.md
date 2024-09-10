@@ -11,6 +11,11 @@
     - [Application Definitions](#application-definitions)
   - [Application vs Infrastructure](#application-vs-infrastructure)
   - [Workflow](#workflow)
+    - [Deploying a new Application](#deploying-a-new-application)
+    - [Testing new Infrastructure](#testing-new-infrastructure)
+    - [Rolling out new Infrastructure](#rolling-out-new-infrastructure)
+    - [Rolling back Infrastructure](#rolling-back-infrastructure)
+    - [Onboarding a new Cluster](#onboarding-a-new-cluster)
 <!--toc:end-->
 
 ---
@@ -430,11 +435,76 @@ these would also be part of the application pool.
 
 ## Workflow
 
-<!--
-TODO:
-  - deploy new app
-  - test new infra
-  - rollout new infra
-  - rollback of infra
-  - onboard new cluster
--->
+There are a couple of cases to consider when working with such a repository. We will focus on a mode
+that allows for collaboration, and easily supports the following use cases that we will look at
+individually:
+
+- deploying a new application,
+- testing new infrastructure,
+- rolling out new infrastructure,
+- rolling back infrastructure,
+- onboarding a new cluster.
+
+Moreover, the workflow is explained under the assumption that only a single (or very few) test
+clusters are available to the infrastructure/platform team to test on. These clusters are shared
+across all infrastructure/platform engineers.
+
+The Git approach to work here is to create PRs targeting the `main`/`master` branch. There PRs are
+always peer reviewed. Whether PRs are first rolled out to test clusters or not is use-case dependent
+and described below.
+
+> [!NOTE]
+> Many companies use change management to deploy changes to their productive components. Platforms
+> also fall under these policies. A good approach for this is to design a pipeline which checks
+> whether the PR updates any files which would impact productive clusters. This can easily be done,
+> as only changes to the cluster definition of a productive cluster or a change to the application
+> definitions can update these clusters. Changes to the infrastructure definition cannot affect the
+> clusters as its version is pinned. In such a case, the pipeline creates a change request based on
+> the commit hash and polls whether it was accepted. It fails if it was not accepted, hence blocking
+> merging (and thus changing configurations on the productive clusters). The pipeline can be
+> retriggered at any time to check whether the change was accepted and be merged when the change is
+> accepted.
+
+### Deploying a new Application
+
+When deploying a new application `app-a` to an existing cluster `cluster-1`, the application can
+simply be added to the list of deployed application in the app Kustomization file of the cluster:
+`clusters/cluster-1/apps/kustomization.yaml`. If the application needs customization, a patch can be
+added to the `values/` directory within that cluster definition, and referenced in the Kustomization
+file.
+
+> [!NOTE]
+> Application deployments cannot be tested per-se, as they are individual to the cluster and tend to
+> be highly customized. If a test is truly needed, the application can first be deployed to a test
+> cluster before being rolled out to the true target cluster.
+
+### Testing new Infrastructure
+
+New infrastructure is tested by updating the infrastructure definition. This is done on a (feature)
+branch and a PR targeting `main`/`master` is opened. This is peer reviewed and merged. Note that if
+having change management in place, this should not trigger a change. Once merged, this will
+automatically be deployed to the test cluster, as this references `main`/`master` as the source of
+the infrastructure. There it can be tested live.
+
+> [!WARNING]
+> Quality gates such as linting and (server-side) dry-run applying resources should be done during
+> the pipeline within the PR even if the resources are not deployed until they land on
+> `main`/`master`.
+
+When the infrastructure has reached a point where it is deemed acceptable for a new release, a short
+freeze can be done for PRs to `main`/`master` and the infrastructure can be tested more thoroughly.
+If appropriate, a changelog entry can be made, and the current version of `main`/`master` tagged to
+represent the new release. Creating a release does not deploy it anywhere, but "makes it available"
+for deployment to productive clusters.
+
+The development of the infrastructure thus follows the exact same workflow as the development of
+standard software. The vast difference being in the comparatively little amount of testing that can
+be done automatically within a pipeline prior to merging to `main`/`master`. This is due to the
+limited availability of a test cluster. Of course, this can be mitigated by having pipelines
+spinning up test clusters and performing automated testing against these clusters. This is however
+often not possible once platforms get large, and might not be as indicative if the test clusters
+differ from actual productive clusters too much.
+
+### Rolling out new Infrastructure
+### Rolling back Infrastructure
+### Onboarding a new Cluster
