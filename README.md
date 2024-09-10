@@ -9,6 +9,7 @@
     - [Cluster Definitions](#cluster-definitions)
     - [Infrastructure Definition](#infrastructure-definition)
     - [Application Definitions](#application-definitions)
+  - [Application vs Infrastructure](#application-vs-infrastructure)
   - [Workflow](#workflow)
 <!--toc:end-->
 
@@ -380,14 +381,52 @@ e.g.:
 - Cluster A: App1 version `0.1.0` and App2 version `0.2.0`.
 - Cluster B: App1 version `0.2.0` and App2 version `0.1.0`.
 
-<!--
-TODO:
-- need to have individual values.
-- need to be able to deploy different versions of the helm chart
-- how to update the monorepo stuff itself
--- via single app definition reference?
--- not possible, but most is kept in the app definitions themselves
--->
+<details>
+<summary>Example definition</summary>
+
+Each application definition will look different based on how the application is deployed. Typically,
+this might take the form of a `kustomization.yaml` file, using a namespace and a Helm release as
+resources. We will not give a concrete example here in the README, as this would make little sense.
+However, have a look at [`./apps/podinfo/`](./apps/podinfo/) for an example of an application
+definition for a Helm based application.
+
+It should be noted that any part of these files might be overwritten by the values declarations in
+the cluster definitions. This is important, as applications are meat to be components that are
+highly customized on each cluster.
+
+</details>
+
+## Application vs Infrastructure
+
+In order to determine whether a component should be part of the infrastructure or the application
+pool, you should ask yourself the following questions:
+
+- Will the component require vastly differing deployment configurations based on which cluster it is
+  deployed to?
+- Will the component be deployed only to a small subset of the clusters?
+- Can the component be thought of as an "add-on" to the cluster, but is not required for the stable
+  functioning of the cluster?
+
+If the answers to these questions tends to be "yes", you are likely better of to define it as an
+application. For instance, a central operator would likely be part of the infrastructure. Such
+deployments are typically not highly differing between platforms (note that infrastructure can still
+be "configured" for each cluster via variables), and needs to be thoroughly tested as part of an
+upgrade. This testing is best done in combination of specific versions of other components (operator
+version `x.y.z` is compatible with Kubernetes version `a.b.c` and relies on another infrastructure
+component of version `d.e.f`). Thus it also makes sense to version that operator as part of the
+overall infrastructure. Note that central operators tend to be part of the infrastructure, even if
+some clusters might not use their functionality.
+
+An example for an application would be something like a managed central Kafka cluster for the entire
+cluster to use (typically installed via a CRD). This is likely not needed on every cluster, and
+might require custom configurations depending on the platform (e.g. different sizing, security
+policies, etc). Another typical example of an application are custom components built by the
+platform engineering team that are required only in some specific cases, or on some very specific
+clusters (e.g. Tekton pipelines are a frequent example of this, which are typically only deployed to
+one or two non-productive clusters).
+
+Of course, if the mono-repo is also used by application teams deploying their custom applications,
+these would also be part of the application pool.
 
 ## Workflow
 
