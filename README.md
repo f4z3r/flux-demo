@@ -91,6 +91,11 @@ The repository is structured in three distinct parts:
 - The infrastructure definition
 - The application definitions
 
+A general overview of the structure can be seen in the diagram below. Each element is explained in
+later sections.
+
+![Repository Structure](./assets/repo-structure.png)
+
 ### Cluster Definitions
 
 The cluster definitions are located under `./clusters/` and typically consist of two parts. A file
@@ -352,7 +357,11 @@ spec:
       it.example.com/owned-by: sre-team
 ```
 
-- should not allow setting version of chart
+It should be noted that variables that affect behaviour of the infrastructure (such as the version
+of the Helm chart to deploy, here `0.8.1`) should not be templated, as the infrastructure version
+(pinned via a git tag) should determine the version of the components to be deployed. This allows to
+test the infrastructure as a whole and ensuring that no version incompatibilities can occur when
+deploying a new infrastructure version.
 
 </details>
 
@@ -361,6 +370,15 @@ spec:
 
 Currently, we only define a single default application to showcase how we plan on deploying apps to
 a cluster. This application is based on https://github.com/stefanprodan/podinfo
+
+Applications are defined differently compared to infrastructure. The main reason is that the
+application definitions cannot be pinned. This is mostly due to the fact that applications are
+components that might be highly customized when deployed to the clusters. Thus it might not make
+sense to pin the version as clusters might needs conflicting versions of applications deployed,
+e.g.:
+
+- Cluster A: App1 version `0.1.0` and App2 version `0.2.0`.
+- Cluster B: App1 version `0.2.0` and App2 version `0.1.0`.
 
 <!--
 TODO:
