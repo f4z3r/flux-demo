@@ -411,6 +411,7 @@ pool, you should ask yourself the following questions:
 - Will the component be deployed only to a small subset of the clusters?
 - Can the component be thought of as an "add-on" to the cluster, but is not required for the stable
   functioning of the cluster?
+- How often will the component need to be lifecycled/rolled-out?
 
 If the answers to these questions tends to be "yes", you are likely better of to define it as an
 application. For instance, a central operator would likely be part of the infrastructure. Such
@@ -421,6 +422,10 @@ version `x.y.z` is compatible with Kubernetes version `a.b.c` and relies on anot
 component of version `d.e.f`). Thus it also makes sense to version that operator as part of the
 overall infrastructure. Note that central operators tend to be part of the infrastructure, even if
 some clusters might not use their functionality.
+
+Finally if the component should be updated very often, it might make sense to keep it separate to
+the infrastructure, which will typically be rolled out only a few times a year. It would be
+detrimental to have a single component forcing an infrastructure roll out if not necessary.
 
 An example for an application would be something like a managed central Kafka cluster for the entire
 cluster to use (typically installed via a CRD). This is likely not needed on every cluster, and
@@ -506,5 +511,39 @@ often not possible once platforms get large, and might not be as indicative if t
 differ from actual productive clusters too much.
 
 ### Rolling out new Infrastructure
+
+In order to roll out new infrastructure, it is as simple as referencing another tag in the
+infrastructure part of the cluster definition for the cluster(s) for which you want to update the
+infrastructure. Once this is merged to `main`/`master`, the cluster(s) will be updated
+automatically. For enterprises requiring stringent change management, the pipeline would detect that
+a change is made to a non-test cluster, and would block merging the PR until the change has been
+approved.
+
+> [!NOTE]
+> Typically, one tries to keep the infrastructure versions fully linear, meaning that no patch
+> versions are released for previous minor versions or the like. If this is desired/needed, a
+> release branch for the LTS version can be created, with patches being cherry picked onto that
+> branch. In such a case it is highly advisable to have another test cluster listen to the release
+> branch to test the infrastructure releases for the LTS version. Hence supporting such processes
+> typically requires higher hardware/hyperscaler costs.
+
 ### Rolling back Infrastructure
+
+An infrastructure roll back is essentially identical to a roll out, the difference being that the
+new referenced tag points to a previous version instead. Such operations are typically done due to
+issues during a roll out, which means they might not require approval from change management. How
+this is solved is unique to the enterprise, but should be considered such that one is not blocked in
+case of emergency.
+
 ### Onboarding a new Cluster
+
+Onboarding a new cluster is quite trivial with such a setup. Once the new Kubernetes cluster is
+ready, it can be onboarded with a simple `flux` bootstrap command pointing to the directory under
+which the cluster definition should live. This will bootstrap Flux onto the cluster. Then a PR to
+onboard the infrastructure can be opened, adding the `infrastructure.yaml` file pointing to the
+desired infrastructure version, and complementing the variables with metadata appropriate to the
+cluster. Once this is merged, the infrastructure is deployed to the cluster. Applications can be
+onboarded onto the new cluster in the same manner. Infrastructure and applications can also be
+onboarded within the same PR, as Flux dependencies will ensure the infrastructure is ready before
+applications are deployed.
+
