@@ -7,7 +7,7 @@ spec:
   interval: 1m
   url: https://github.com/f4z3r/flux-demo.git
   ref:
-    tag: v0.1.0
+    branch: main
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
