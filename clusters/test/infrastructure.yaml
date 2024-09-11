@@ -32,3 +32,4 @@ spec:
       infrastructure_nginx_release_interval: "1m"
       infrastructure_vso_release_interval: "1m"
       infrastructure_eso_release_interval: "1m"
+      infrastructure_rbac_manager_release_interval: "1m"
