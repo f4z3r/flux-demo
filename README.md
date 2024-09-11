@@ -16,6 +16,7 @@
     - [Rolling out new Infrastructure](#rolling-out-new-infrastructure)
     - [Rolling back Infrastructure](#rolling-back-infrastructure)
     - [Onboarding a new Cluster](#onboarding-a-new-cluster)
+    - [Upgrading Flux](#upgrading-flux)
 <!--toc:end-->
 
 ---
@@ -448,7 +449,8 @@ individually:
 - testing new infrastructure,
 - rolling out new infrastructure,
 - rolling back infrastructure,
-- onboarding a new cluster.
+- onboarding a new cluster,
+- upgrading Flux.
 
 Moreover, the workflow is explained under the assumption that only a single (or very few) test
 clusters are available to the infrastructure/platform team to test on. These clusters are shared
@@ -547,3 +549,22 @@ onboarded onto the new cluster in the same manner. Infrastructure and applicatio
 onboarded within the same PR, as Flux dependencies will ensure the infrastructure is ready before
 applications are deployed.
 
+### Upgrading Flux
+
+In order to upgrade Flux itself, simply export the new manifests to the cluster definition:
+
+```bash
+# assuming we are updating Flux on cluster-1
+flux install --export > ./clusters/cluster-1/flux-system/gotk-components.yaml
+```
+
+Again, the new manifests would be pushed to create a PR, hence undergoing change management and peer
+review.
+
+> [!NOTE]
+> Flux itself is outside the infrastructure definition, thus it is possible to update flux
+> separately to the infrastructure. This provides flexibility to introduce smaller changes (e.g.
+> update Flux without changing infrastructure). It however also requires one to ensure that the
+> infrastructure is compatible with the Flux version installed on the cluster (for instance when
+> Flux CRD versions change). It is possible to include the Flux version directly into the
+> infrastructure definition to couple them and improve stability (at the cost of flexibility).
