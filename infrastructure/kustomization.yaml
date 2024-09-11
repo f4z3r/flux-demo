@@ -5,6 +5,7 @@ resources:
   - vault-secrets-operator/base.yaml
   - nginx/base.yaml
   - external-secrets-operator/base.yaml
+  - rbac-manager/base.yaml
 
 patches:
 - patch: |-
@@ -20,6 +21,7 @@ patches:
           infrastructure_nginx_release_interval: "${infrastructure_nginx_release_interval:=30m}"
           infrastructure_vso_release_interval: "${infrastructure_vso_release_interval:=30m}"
           infrastructure_eso_release_interval: "${infrastructure_eso_release_interval:=30m}"
+          infrastructure_rbac_manager_release_interval: "${infrastructure_rbac_manager_release_interval:=30m}"
   target:
     group: kustomize.toolkit.fluxcd.io
     version: v1
