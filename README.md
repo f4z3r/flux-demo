@@ -498,6 +498,12 @@ the infrastructure. There it can be tested live.
 > the pipeline within the PR even if the resources are not deployed until they land on
 > `main`/`master`.
 
+The infrastructure might also be tested while still on the feature branch, before the PR is merged
+into `main`/`master`. It should be notes that this requires another Kubernetes cluster with a
+bootstrapped Flux installation though. This might be doable locally with lightweight distributions
+such as KinD, K3d, MiniKube or the like, or by spinning up another "real" cluster for testing if
+available.
+
 When the infrastructure has reached a point where it is deemed acceptable for a new release, a short
 freeze can be done for PRs to `main`/`master` and the infrastructure can be tested more thoroughly.
 If appropriate, a changelog entry can be made, and the current version of `main`/`master` tagged to
