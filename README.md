@@ -202,7 +202,15 @@ variables are used within the infrastructure definition and can be set here to c
 infrastructure components as needed.
 
 Another important aspect to note is that the infrastructure as a whole is deployed (`path:
-./infrastructure/`) and not individual elements of the infrastructure being hand picked.
+./infrastructure/`) and not individual elements of the infrastructure being hand picked. In this
+`./instastructure` path, a `kustomization.yaml` file generates a set of FluxCD `Kustomization`s,
+each of which deploys a single component. The `kustomization.yaml` re-injects the variables from the
+variable substitution into the downstream components. This second layer of FluxCD `Kustomization`s
+is needed in order to enable dependencies between the components. Generally, if one is fully based
+on Helm charts, this indirection is not needed, as the `HelmRelease` resources allow to define
+dependencies. If one deploys "raw" YAML files as part of the components, which often happens, one
+cannot express a dependency of these raw files without the extra layer of FluxCD `Kustomization`s.
+See the infrastructure version `0.3.0` for an example without this indirection.
 
 </details>
 
@@ -330,17 +338,63 @@ section).
 ### Infrastructure Definition
 
 The infrastructure definition is fully placed under `infrastructure/`. Each component of the
-infrastructure is placed within a subdirectory there and simply contains files needed to deploy that
-infrastructure component. For instance, for the Vault Secrets Operator, a namespace, Helm
-repository, and a release of the operator are defined. These files can use cluster variables that
-are then injected by the infrastructure deployment.
+infrastructure is placed within a subdirectory there and contains a base FluxCD `Kustomization`, a
+`kustomization.yaml`, and the files needed to deploy that infrastructure component. For instance,
+for the Vault Secrets Operator, a namespace, Helm repository, and a release of the operator are
+defined. The FluxCD `Kustomization` (`base.yaml`) is needed to express the dependencies between
+components, while the `kustomization.yaml` is needed to ensure that the `base.yaml` does not deploy
+itself. The actual resources being deployed can use cluster variables that are then injected by the
+infrastructure deployment.
 
 <details>
 <summary>Example definition</summary>
 
+**FluxCD `Kustomization`**
+
+This is an example of a `base.yaml` file, deploying the Vault Secrets Operator component. It deploys
+specifically that directory, which contains the `kustomization.yaml` described below.
+
+> The variable substitution does not need to be defined here. It will get automatically injected by
+> `./infrastructure/kustomization.yaml` file such that all variables are available.
+
+```yaml
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: vault-secrets-operator
+  namespace: flux-system
+spec:
+  interval: 5m
+  retryInterval: 1m
+  timeout: 5m
+  sourceRef:
+    kind: GitRepository
+    name: infrastructure
+  path: ./infrastructure/vault-secrets-operator
+  prune: true
+  wait: true
+```
+
+**`kustomization.yaml` File**
+
+The `kustomization.yaml` simply references the deployment files that are part of the component.
+
+```yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ns.yaml
+  - repo.yaml
+  - release.yaml
+```
+
+**Deployment Files**
+
 The snippet below shows a Helm release using a variable to determine the interval for which Flux
-should verify the release and reconcile it on the cluster. It sets a default of 30 minutes, which
-can be overwritten by every cluster definition as needed.
+should verify the release and reconcile it on the cluster. The defaults for this variable should be
+set within the `./infrastructure/kustomization.yaml` file. This ensures that the default is set
+globally and not in every place the variable is used.
 
 ```yaml
 apiVersion: helm.toolkit.fluxcd.io/v2
@@ -349,7 +403,7 @@ metadata:
   name: vault-secrets-operator
   namespace: vault-secrets-operator
 spec:
-  interval: "${infrastructure_vso_release_interval:=30m}"
+  interval: "${infrastructure_vso_release_interval}"
   chart:
     spec:
       chart: vault-secrets-operator

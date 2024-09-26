@@ -4,7 +4,7 @@ metadata:
   name: vault-secrets-operator
   namespace: vault-secrets-operator
 spec:
-  interval: "${infrastructure_vso_release_interval:=30m}"
+  interval: "${infrastructure_vso_release_interval}"
   chart:
     spec:
       chart: vault-secrets-operator

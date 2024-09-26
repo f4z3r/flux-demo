@@ -28,7 +28,6 @@ spec:
     substitute:
       meta_cluster_name: "test"
       meta_network_zone: "dmz-123"
-      meta_productive: "true"
       infrastructure_nginx_release_interval: "1m"
       infrastructure_vso_release_interval: "1m"
       infrastructure_eso_release_interval: "1m"

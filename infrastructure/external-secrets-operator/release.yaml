@@ -4,7 +4,7 @@ metadata:
   name: external-secrets-operator
   namespace: external-secrets-operator
 spec:
-  interval: "${infrastructure_eso_release_interval:=30m}"
+  interval: "${infrastructure_eso_release_interval}"
   chart:
     spec:
       chart: external-secrets
