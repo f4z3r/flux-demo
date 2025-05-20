@@ -6,6 +6,7 @@ resources:
   - nginx/base.yaml
   - external-secrets-operator/base.yaml
   - rbac-manager/base.yaml
+  - weave-gitops/base.yaml
 
 patches:
 - patch: |-
