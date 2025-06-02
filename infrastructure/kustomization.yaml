@@ -6,6 +6,7 @@ resources:
   - nginx/base.yaml
   - external-secrets-operator/base.yaml
   - rbac-manager/base.yaml
+  - weave-gitops/base.yaml
 
 patches:
 - patch: |-
@@ -22,6 +23,7 @@ patches:
           infrastructure_vso_release_interval: "${infrastructure_vso_release_interval:=30m}"
           infrastructure_eso_release_interval: "${infrastructure_eso_release_interval:=30m}"
           infrastructure_rbac_manager_release_interval: "${infrastructure_rbac_manager_release_interval:=30m}"
+          weave_gitops_admin_password_hash: "${weave_gitops_admin_password_hash:=$2y$05$PgacAmdgWzXfG4QpVsPiIeIDICtNUl99MxNRnM4QDa1QafiFx08w6}" # encode for demo cluster afterwards 
   target:
     group: kustomize.toolkit.fluxcd.io
     version: v1

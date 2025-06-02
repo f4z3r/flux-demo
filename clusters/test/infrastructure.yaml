@@ -32,3 +32,4 @@ spec:
       infrastructure_vso_release_interval: "1m"
       infrastructure_eso_release_interval: "1m"
       infrastructure_rbac_manager_release_interval: "1m"
+      weave_gitops_admin_password_hash: "$2y$10$5dupD/6yPQqkA0igKc/yoO6.g1u96V7vRICCph9bQ7FM1vkoV7GFy"
