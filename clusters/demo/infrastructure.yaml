@@ -5,7 +5,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 1m
-  url: https://github.com/f4z3r/flux-demo.git
+  url: https://github.com/VincentVonBueren/flux-demo.git
   ref:
     tag: v0.3.0
 ---
