@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Add rbac-manager operator version 1.21.0 (operator version 1.9.0) to infrastructure.
+- Add weave-gitops to infrastructure.
 
 ## [0.4.0]
 
