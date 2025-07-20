@@ -1,28 +1,21 @@
+<div align="center">
+
+<img src="./assets/logo.png" alt="FluxCD" width="25%">
+
 # Flux Demo
 
-<!--toc:start-->
-- [Flux Demo](#flux-demo)
-  - [Setup](#setup)
-    - [Generate a GitHub PAT](#generate-a-github-pat)
-    - [Setup a Cluster with Flux](#setup-a-cluster-with-flux)
-  - [Structure of the Repo](#structure-of-the-repo)
-    - [Cluster Definitions](#cluster-definitions)
-    - [Infrastructure Definition](#infrastructure-definition)
-    - [Application Definitions](#application-definitions)
-  - [Application vs Infrastructure](#application-vs-infrastructure)
-  - [Workflow](#workflow)
-    - [Deploying a new Application](#deploying-a-new-application)
-    - [Testing new Infrastructure](#testing-new-infrastructure)
-    - [Rolling out new Infrastructure](#rolling-out-new-infrastructure)
-    - [Rolling back Infrastructure](#rolling-back-infrastructure)
-    - [Onboarding a new Cluster](#onboarding-a-new-cluster)
-    - [Upgrading Flux](#upgrading-flux)
-<!--toc:end-->
+![GitHub last commit](https://img.shields.io/github/last-commit/f4z3r/flux-demo)
+![GitHub License](https://img.shields.io/github/license/f4z3r/flux-demo)
 
----
+### An example how one can use a mono-repo to manage large infrastructure in a controlled fashion using FluxCD.
 
-This repository shows an example how one can use a single mono-repository to manage multiple
-clusters' infrastructure in a controlled fashion.
+[Setup](#setup) |
+[Structure of the Repo](#structure-of-the-repo) |
+[Application vs Infrastructure](#application-vs-infrastructure) |
+[Workflow](#workflow)
+
+<hr />
+</div>
 
 ## Setup
 
