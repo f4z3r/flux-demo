@@ -1,99 +1,79 @@
 {
   "lockfile_version": "1",
   "packages": {
-    "fluxcd@2.6.4": {
-      "last_modified": "2025-07-17T10:11:59Z",
-      "resolved": "github:NixOS/nixpkgs/fa0ef8a6bb1651aa26c939aeb51b5f499e86b0ec#fluxcd",
+    "fluxcd@2.9.4": {
+      "last_modified": "2026-08-27T07:16:00Z",
+      "resolved": "github:NixOS/nixpkgs/c27cdad491a991b11ed731760aa2ef8db0cb0410#fluxcd",
       "source": "devbox-search",
-      "version": "2.6.4",
+      "version": "2.9.4",
       "systems": {
         "aarch64-darwin": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/ryjwdxklvkar3fy7wpv2d3hph0qyn6ml-fluxcd-2.6.4",
+              "path": "/nix/store/z794fv8ah0big8icb5mzlawjz5x1m920-fluxcd-2.9.4",
               "default": true
             }
           ],
-          "store_path": "/nix/store/ryjwdxklvkar3fy7wpv2d3hph0qyn6ml-fluxcd-2.6.4"
+          "store_path": "/nix/store/z794fv8ah0big8icb5mzlawjz5x1m920-fluxcd-2.9.4"
         },
         "aarch64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/0azjabblakb5j23594j2jygbk1q59pj0-fluxcd-2.6.4",
+              "path": "/nix/store/f15035db8j3rxpm8ccv2ndcyj4rq2a4y-fluxcd-2.9.4",
               "default": true
             }
           ],
-          "store_path": "/nix/store/0azjabblakb5j23594j2jygbk1q59pj0-fluxcd-2.6.4"
-        },
-        "x86_64-darwin": {
-          "outputs": [
-            {
-              "name": "out",
-              "path": "/nix/store/jj6gnvjmdlqvq25862xrpxlcx7j8lssm-fluxcd-2.6.4",
-              "default": true
-            }
-          ],
-          "store_path": "/nix/store/jj6gnvjmdlqvq25862xrpxlcx7j8lssm-fluxcd-2.6.4"
+          "store_path": "/nix/store/f15035db8j3rxpm8ccv2ndcyj4rq2a4y-fluxcd-2.9.4"
         },
         "x86_64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/wjnncfxi7xd3nyk6jghqgjf5bp1adqap-fluxcd-2.6.4",
+              "path": "/nix/store/pl4bhvkmlin9rq607yy7n401sbs48vgd-fluxcd-2.9.4",
               "default": true
             }
           ],
-          "store_path": "/nix/store/wjnncfxi7xd3nyk6jghqgjf5bp1adqap-fluxcd-2.6.4"
+          "store_path": "/nix/store/pl4bhvkmlin9rq607yy7n401sbs48vgd-fluxcd-2.9.4"
         }
       }
     },
-    "kind@0.29.0": {
-      "last_modified": "2025-07-13T22:45:35Z",
-      "resolved": "github:NixOS/nixpkgs/a421ac6595024edcfbb1ef950a3712b89161c359#kind",
+    "kind@0.32.0": {
+      "last_modified": "2026-08-27T07:16:00Z",
+      "resolved": "github:NixOS/nixpkgs/c27cdad491a991b11ed731760aa2ef8db0cb0410#kind",
       "source": "devbox-search",
-      "version": "0.29.0",
+      "version": "0.32.0",
       "systems": {
         "aarch64-darwin": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/hdvmcakmznrsgl9pjcanr2h6qv126n4b-kind-0.29.0",
+              "path": "/nix/store/jzvzpvkccqz0lsqlnvm74cf8kyl66m6k-kind-0.32.0",
               "default": true
             }
           ],
-          "store_path": "/nix/store/hdvmcakmznrsgl9pjcanr2h6qv126n4b-kind-0.29.0"
+          "store_path": "/nix/store/jzvzpvkccqz0lsqlnvm74cf8kyl66m6k-kind-0.32.0"
         },
         "aarch64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/xl038i13lbqm7l7ba6b1bf50n6jsf7si-kind-0.29.0",
+              "path": "/nix/store/l4k5xwn2j8r5pazgky3k1467iwygphrf-kind-0.32.0",
               "default": true
             }
           ],
-          "store_path": "/nix/store/xl038i13lbqm7l7ba6b1bf50n6jsf7si-kind-0.29.0"
-        },
-        "x86_64-darwin": {
-          "outputs": [
-            {
-              "name": "out",
-              "path": "/nix/store/pbycgb539fzywy96fz46g5k5gjwvafz7-kind-0.29.0",
-              "default": true
-            }
-          ],
-          "store_path": "/nix/store/pbycgb539fzywy96fz46g5k5gjwvafz7-kind-0.29.0"
+          "store_path": "/nix/store/l4k5xwn2j8r5pazgky3k1467iwygphrf-kind-0.32.0"
         },
         "x86_64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/61cw38fcwwyrja1a4zxwrfmdq7j3m4hd-kind-0.29.0",
+              "path": "/nix/store/8h2y0wx7cv9iax5rzkyjl07a494qxygl-kind-0.32.0",
               "default": true
             }
           ],
-          "store_path": "/nix/store/61cw38fcwwyrja1a4zxwrfmdq7j3m4hd-kind-0.29.0"
+          "store_path": "/nix/store/8h2y0wx7cv9iax5rzkyjl07a494qxygl-kind-0.32.0"
         }
       }
     }
